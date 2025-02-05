@@ -16,14 +16,13 @@ namespace Head_First_csharp
         CheckBox fancyBox;
         CheckBox healthyBox;
         Label costLabel;
+        NumericUpDown pNumeric;
 
         public Form1()
         {
             InitializeComponent();
             dinnerParty = new DinnerParty() { NumberOfPeople = 5 };
-            dinnerParty.SetHealthyOption(false);
-            dinnerParty.CalculateCostOfDecorations(true);
-            DisplayDinnerPartyCost();
+            
 
             // 폼 조정
             this.Size = new Size(270, 300);
@@ -34,12 +33,22 @@ namespace Head_First_csharp
             CreateLabel("Number of People", new Point(20, 20));
             CreateLabel("Cost", new Point(20, 200));
             fancyBox = CreateCheckBox("Fancy Decorations", new Point(25, 100));
+            fancyBox.Checked = true;
             healthyBox = CreateCheckBox("Healthy Option", new Point(25, 130));
-            CreateNumeric(new Point(20, 50));
+            pNumeric = CreateNumeric(new Point(20, 50));
             costLabel = CreateCost(new Point(100, 200));
+
+            // 이벤트 등록
+            fancyBox.CheckedChanged += fancyBox_CheckedChanged;
+            healthyBox.CheckedChanged += healthyBox_CheckedChanged;
+            pNumeric.ValueChanged += pNumeric_ValueChanged;
+
+            dinnerParty.CalculateCostOfDecorations(fancyBox.Checked);
+            dinnerParty.SetHealthyOption(healthyBox.Checked);
+            DisplayDinnerPartyCost();
         }
 
-        #region controls create
+        #region create controls
         public void CreateLabel(string text, Point point)
         {
             Label myLabel = new Label();
@@ -68,7 +77,7 @@ namespace Head_First_csharp
             return myCheckbox;
         }
 
-        public void CreateNumeric(Point point)
+        public NumericUpDown CreateNumeric(Point point)
         {
             NumericUpDown myNumeric = new NumericUpDown();
 
@@ -80,6 +89,7 @@ namespace Head_First_csharp
             myNumeric.AutoSize = true;
 
             this.Controls.Add(myNumeric);
+            return myNumeric;
         }
 
         public Label CreateCost(Point point)
@@ -98,11 +108,35 @@ namespace Head_First_csharp
 
         #endregion
 
-        private void DisplayDinnerPartyCost()
+
+        #region event callback method
+
+        // object sender: 이벤트를 발생시킨 객체(컨트롤), 이벤트가 발생한 객체 자신을 가리킴, 이벤트가 연결된 컨트롤 확인할 때 사용
+        // EventArgs e: 이벤트에 대한 추가 정보 제공, 
+        private void pNumeric_ValueChanged(object sender, EventArgs e)      
         {
-            decimal Cost = dinnerParty.CalculateCost(fancyBox.Checked);
-            costLabel.Text = "$" + Cost.ToString("F2");    // ToString 메서드에 "c"를 넘겨주면 통화값(돈)으로 서식을 지정함
+            dinnerParty.NumberOfPeople = (int)pNumeric.Value;
+            DisplayDinnerPartyCost();
         }
 
+        private void fancyBox_CheckedChanged(object sender, EventArgs e)
+        {
+            // as 연산자: 객체를 특정 타입으로 변환하는데 사용 (타입 변수 = 객체 as 타입)
+            dinnerParty.CalculateCostOfDecorations(fancyBox.Checked);
+            DisplayDinnerPartyCost();
+        }
+
+        private void healthyBox_CheckedChanged(object sender, EventArgs e)
+        {
+            dinnerParty.SetHealthyOption(healthyBox.Checked);
+            DisplayDinnerPartyCost();
+        }
+        #endregion
+
+        private void DisplayDinnerPartyCost()
+        {
+            decimal Cost = dinnerParty.CalculateCost(healthyBox.Checked);
+            costLabel.Text = "$" + Cost.ToString("F2");    // ToString 메서드에 "c"를 넘겨주면 통화값(돈)으로 서식을 지정함
+        }
     }
 }
