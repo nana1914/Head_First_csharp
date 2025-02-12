@@ -21,7 +21,7 @@ namespace Head_First_csharp
         public Form1()
         {
             InitializeComponent();
-            dinnerParty = new DinnerParty() { NumberOfPeople = 5 };
+            dinnerParty = new DinnerParty(); //{ NumberOfPeople = 5 };
             
 
             // 폼 조정
@@ -115,7 +115,9 @@ namespace Head_First_csharp
         // EventArgs e: 이벤트에 대한 추가 정보 제공, 
         private void pNumeric_ValueChanged(object sender, EventArgs e)      
         {
-            dinnerParty.NumberOfPeople = (int)pNumeric.Value;
+            //dinnerParty.NumberOfPeople = (int)pNumeric.Value;
+            dinnerParty.SetPartyOptions((int)pNumeric.Value, fancyBox.Checked);
+
             DisplayDinnerPartyCost();
         }
 

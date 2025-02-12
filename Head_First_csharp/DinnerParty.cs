@@ -9,9 +9,20 @@ namespace Head_First_csharp
     class DinnerParty
     {
         public const int CostOfFoodPerPerson = 25;      // 1인당 식비
-        public int NumberOfPeople;                      // 사람의 수
+        private int NumberOfPeople = 5;                      // 사람의 수
         public decimal CostOfBeveragesPerPerson;        // 1인당 음료 비용
         public decimal CostOfDecorations;               // 장식 비용
+
+        public void SetPartyOptions(int people, bool fancy)
+        {
+            NumberOfPeople = people;
+            CalculateCostOfDecorations(fancy);
+        }
+
+        public int GetNumberOfPeople()
+        {
+            return NumberOfPeople;
+        }
 
         public void SetHealthyOption(bool healthyOption)
         {
